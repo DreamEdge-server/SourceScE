@@ -1,0 +1,24 @@
+name: SourceScE
+version: 1.0.10
+main: com.source.sourcesce.Main
+api-version: "1.20"
+authors: [SourceScE]
+description: Fullscreen screen effects (title fade + color + freeze + HUD hiding)
+softdepend:
+  - CraftEngine
+  - BetterHud
+  - packetevents
+  - PlaceholderAPI
+commands:
+  sourcesce:
+    description: Show or stop a fullscreen screen effect
+    usage: /sourcesce <effect> <color> <fadein> <stay> <fadeout> <freeze|nofreeze> [target] [message] | /sourcesce stop [target]
+    permission: sourcesce.use
+    aliases: [sce, screeneffect]
+permissions:
+  sourcesce.use:
+    description: Use /sourcesce
+    default: op
+  sourcesce.others:
+    description: Show/stop effects for other players
+    default: op

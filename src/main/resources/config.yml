@@ -1,0 +1,31 @@
+# --- HUD hiding while a screen effect is showing (everything is restored when it ends) ---
+
+# Hide the player's BetterHud custom HUDs during the effect.
+# BetterHud is only a SOFT dependency: if it isn't installed this is simply skipped, and the plugin
+# works fine without it. Set to false if you don't want BetterHud HUDs hidden during effects.
+hide-betterhud: true
+
+# Hide the vanilla Minecraft HUD (hotbar, health, hunger, XP bar, and the scoreboard sidebar) during
+# the effect. The hotbar/health/etc. are hidden by sending a client-side spectator game-mode packet
+# via PacketEvents (the real server-side game mode is NOT changed); the sidebar is hidden by a blank
+# scoreboard. PacketEvents is a SOFT dependency: without it the sidebar is still hidden but the
+# hotbar/health are not. Set to false to leave the vanilla HUD visible during effects.
+hide-vanilla-hud: true
+
+# Rendered pixel width of the overlay image glyph. Used to wrap the image in symmetric negative-space
+# shifts so it stays a centred background and the title text overlays it centred. Set this to the
+# image's actual render width (~= its `height` for the square textures); tune if the title text is
+# off-centre over the image.
+overlay-image-width: 256
+
+# Console commands run when a screen effect starts / finishes for a player.
+# %player% is replaced with the player's name. Disabled by default.
+execute_commands_on_start:
+  enabled: false
+  commands:
+    - "say %player% entered a screen effect"
+
+execute_commands_on_finish:
+  enabled: false
+  commands:
+    - "say %player% left the screen effect"

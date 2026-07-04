@@ -1,0 +1,19 @@
+# Fullscreen overlay images (the original ScreenEffects textures), sent inside a vanilla title so the
+# title's fadein/stay/fadeout give the native fade. The glyph is WHITE and tinted to any colour in
+# code (white glyph x colour = that colour):
+#   fullscreen             = white, opaque (A=255)  -> tinted = solid colour
+#   fullscreen_transparent = white, 50% alpha       -> tinted = semi-transparent colour
+# height/ascent match the working GeneMachinery image; raise `height` for larger coverage.
+images:
+  sourcesce:fullscreen:
+    file: sourcesce:fullscreen.png
+    font: minecraft:default
+    height: 256
+    ascent: 100
+    grid_size: 1,1
+  sourcesce:fullscreen_transparent:
+    file: sourcesce:fullscreen_transparent.png
+    font: minecraft:default
+    height: 256
+    ascent: 100
+    grid_size: 1,1
