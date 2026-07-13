@@ -93,8 +93,6 @@ public final class Command implements CommandExecutor, TabCompleter
         }
         if (shown == 0)
             sender.sendMessage(ChatColor.YELLOW + "Nothing shown — check the effect id '" + effect + "' exists in CraftEngine (run /ce reload pack).");
-        else
-            sender.sendMessage(ChatColor.GREEN + "Screen effect shown to " + shown + " player(s).");
         return true;
     }
 

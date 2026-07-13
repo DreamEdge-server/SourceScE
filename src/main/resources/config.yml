@@ -3,14 +3,20 @@
 # Hide the player's BetterHud custom HUDs during the effect.
 # BetterHud is only a SOFT dependency: if it isn't installed this is simply skipped, and the plugin
 # works fine without it. Set to false if you don't want BetterHud HUDs hidden during effects.
-hide-betterhud: true
+# 2026-07-13: defaulted to false — SourceTasks' own dialogue popups are BetterHud popups too, and its
+# SpectatorGuise dialogue-acting system independently drives the same vanilla-HUD spectator illusion;
+# both plugins fighting over the same HUD state (whichever "restore" fires first wins) causes visible
+# glitches. Nothing else currently calls into SourceScE, so this default costs nothing today.
+hide-betterhud: false
 
 # Hide the vanilla Minecraft HUD (hotbar, health, hunger, XP bar, and the scoreboard sidebar) during
 # the effect. The hotbar/health/etc. are hidden by sending a client-side spectator game-mode packet
 # via PacketEvents (the real server-side game mode is NOT changed); the sidebar is hidden by a blank
 # scoreboard. PacketEvents is a SOFT dependency: without it the sidebar is still hidden but the
 # hotbar/health are not. Set to false to leave the vanilla HUD visible during effects.
-hide-vanilla-hud: true
+# 2026-07-13: defaulted to false for the same reason as hide-betterhud above — SourceTasks' own
+# dialogue "acting" system does the identical spectator-packet trick and the two would desync.
+hide-vanilla-hud: false
 
 # Rendered pixel width of the overlay image glyph. Used to wrap the image in symmetric negative-space
 # shifts so it stays a centred background and the title text overlays it centred. Set this to the
