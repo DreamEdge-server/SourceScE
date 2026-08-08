@@ -1,0 +1,11 @@
+command:
+  usage: "&e/%label% <effect> <color> <fadein> <stay> <fadeout> <freeze|nofreeze> [target] [title] [subtitle]"
+  spaces: "&7  title/subtitle: use /_ for spaces, e.g. Welcome/_home"
+  stop-usage: "&e/%label% stop [target]"
+  invalid-color: "&eInvalid color! Examples: RED, #770000"
+  invalid-ticks: "&efadein/stay/fadeout must be whole numbers of ticks."
+  craftengine-missing: "&cCraftEngine is not installed - cannot show screen effects."
+  no-effect: "&eNothing shown - check the effect id '%effect%' exists in CraftEngine (run /ce reload pack)."
+  console-target: "&eSpecify a player when running this from console."
+  no-others-permission: "&cYou don't have permission sourcesce.others"
+  player-not-found: "&ePlayer not found: %player%"

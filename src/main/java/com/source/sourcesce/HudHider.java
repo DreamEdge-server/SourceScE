@@ -39,8 +39,8 @@ final class HudHider
                 sendGamemode(player, 3f); // spectator
                 player.setAllowFlight(player.getAllowFlight());
             }
-            savedBoards.put(player.getUniqueId(), player.getScoreboard());
-            if (Bukkit.getScoreboardManager() != null)
+            if (savedBoards.putIfAbsent(player.getUniqueId(), player.getScoreboard()) == null
+                    && Bukkit.getScoreboardManager() != null)
                 player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         }
     }
@@ -59,6 +59,11 @@ final class HudHider
         }
         if (cfg("hide-betterhud"))
             setBetterHudEnabled(player, true);
+    }
+
+    static void discard(Player player)
+    {
+        savedBoards.remove(player.getUniqueId());
     }
 
     private static boolean cfg(String key)

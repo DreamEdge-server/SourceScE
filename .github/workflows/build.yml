@@ -1,14 +1,19 @@
-name: Build
+name: Build and Publish
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.metadata.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,12 +27,54 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      - name: Build
-        run: ./gradlew build --no-daemon --stacktrace
+      - name: Build plugin
+        run: ./gradlew clean test shadowJar --no-daemon --stacktrace
 
-      - name: Upload plugin jar
+      - name: Prepare release files
+        id: metadata
+        shell: bash
+        run: |
+          version="$(awk -F': ' '$1 == "version" { gsub(/"/, "", $2); print $2; exit }' src/main/resources/plugin.yml)"
+          test -n "$version"
+          mkdir -p dist
+          cp "build/libs/SourceScE.jar" "dist/SourceScE-${version}.jar"
+          (
+            cd src/main/resources/craftengine-pack
+            zip -qr "$GITHUB_WORKSPACE/dist/SourceScE-craftengine-pack-${version}.zip" sourcesce
+          )
+          sha256sum dist/* > "dist/SHA256SUMS"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Upload build files
         uses: actions/upload-artifact@v4
         with:
-          name: SourceScE
-          path: build/libs/SourceScE.jar
+          name: SourceScE-${{ steps.metadata.outputs.version }}
+          path: dist/*
           if-no-files-found: error
+
+  publish:
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download build files
+        uses: actions/download-artifact@v4
+        with:
+          name: SourceScE-${{ needs.build.outputs.version }}
+          path: dist
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          tag="v${VERSION}"
+          if ! gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$tag" \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "SourceScE ${VERSION}" \
+              --notes "Automated build from ${GITHUB_SHA}."
+          fi
+          gh release upload "$tag" dist/* --repo "$GITHUB_REPOSITORY" --clobber

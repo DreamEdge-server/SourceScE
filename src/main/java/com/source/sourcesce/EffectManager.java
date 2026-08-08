@@ -154,5 +154,6 @@ public final class EffectManager implements Listener
         UUID id = e.getPlayer().getUniqueId();
         cancelRestore(id);
         frozen.remove(id);
+        HudHider.discard(e.getPlayer());
     }
 }

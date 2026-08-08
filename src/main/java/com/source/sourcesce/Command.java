@@ -42,9 +42,9 @@ public final class Command implements CommandExecutor, TabCompleter
 
         if (args.length < 6)
         {
-            sender.sendMessage(ChatColor.YELLOW + "/" + label + " <effect> <color> <fadein> <stay> <fadeout> <freeze|nofreeze> [target] [title] [subtitle]");
-            sender.sendMessage(ChatColor.GRAY + "  title/subtitle: use /_ for spaces, e.g. Welcome/_home");
-            sender.sendMessage(ChatColor.YELLOW + "/" + label + " stop [target]");
+            sender.sendMessage(message("command.usage", "label", label));
+            sender.sendMessage(message("command.spaces"));
+            sender.sendMessage(message("command.stop-usage", "label", label));
             return true;
         }
 
@@ -52,7 +52,7 @@ public final class Command implements CommandExecutor, TabCompleter
         TextColor color = parseColor(args[1]);
         if (color == null)
         {
-            sender.sendMessage(ChatColor.YELLOW + "Invalid color! Examples: RED, #770000");
+            sender.sendMessage(message("command.invalid-color"));
             return true;
         }
 
@@ -65,7 +65,7 @@ public final class Command implements CommandExecutor, TabCompleter
         }
         catch (NumberFormatException e)
         {
-            sender.sendMessage(ChatColor.YELLOW + "fadein/stay/fadeout must be whole numbers of ticks.");
+            sender.sendMessage(message("command.invalid-ticks"));
             return true;
         }
 
@@ -80,7 +80,7 @@ public final class Command implements CommandExecutor, TabCompleter
 
         if (!CraftEngineHook.isAvailable())
         {
-            sender.sendMessage(ChatColor.RED + "CraftEngine is not installed — cannot show screen effects.");
+            sender.sendMessage(message("command.craftengine-missing"));
             return true;
         }
 
@@ -92,7 +92,7 @@ public final class Command implements CommandExecutor, TabCompleter
                 shown++;
         }
         if (shown == 0)
-            sender.sendMessage(ChatColor.YELLOW + "Nothing shown — check the effect id '" + effect + "' exists in CraftEngine (run /ce reload pack).");
+            sender.sendMessage(message("command.no-effect", "effect", effect));
         return true;
     }
 
@@ -115,12 +115,12 @@ public final class Command implements CommandExecutor, TabCompleter
         if (target == null || target.equalsIgnoreCase("me"))
         {
             if (sender instanceof Player) return Collections.singletonList((Player) sender);
-            sender.sendMessage(ChatColor.YELLOW + "Specify a player when running this from console.");
+            sender.sendMessage(message("command.console-target"));
             return null;
         }
         if (!sender.hasPermission("sourcesce.others"))
         {
-            sender.sendMessage(ChatColor.RED + "You don't have permission sourcesce.others");
+            sender.sendMessage(message("command.no-others-permission"));
             return null;
         }
         if (target.equalsIgnoreCase("all"))
@@ -128,7 +128,7 @@ public final class Command implements CommandExecutor, TabCompleter
         Player p = Bukkit.getPlayerExact(target);
         if (p == null)
         {
-            sender.sendMessage(ChatColor.YELLOW + "Player not found: " + target);
+            sender.sendMessage(message("command.player-not-found", "player", target));
             return null;
         }
         return Collections.singletonList(p);
@@ -167,5 +167,12 @@ public final class Command implements CommandExecutor, TabCompleter
         List<String> out = new ArrayList<>();
         for (String o : options) if (o.toLowerCase().startsWith(low)) out.add(o);
         return out;
+    }
+
+    private String message(String path, Object... values)
+    {
+        java.util.Map<String, Object> map = new java.util.HashMap<>();
+        for (int i = 0; i + 1 < values.length; i += 2) map.put(String.valueOf(values[i]), values[i + 1]);
+        return plugin.message(path, map);
     }
 }
