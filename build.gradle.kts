@@ -7,7 +7,7 @@ group = "com.source.sourcesce"
 version = "1.0.11"
 
 val paperApiVersion = providers.gradleProperty("paperApiVersion")
-    .orElse("26.1.2.build.74-stable")
+    .orElse("26.3.build.38-alpha")
     .get()
 
 java {
@@ -18,7 +18,7 @@ java {
 
 repositories {
     mavenCentral()
-    if (paperApiVersion.startsWith("26.2.")) {
+    if (paperApiVersion.startsWith("26.")) {
         maven("https://repo.papermc.io/repository/maven-public/") {
             name = "paperApiMetadata"
             metadataSources {
@@ -32,7 +32,7 @@ repositories {
         }
     }
     maven("https://repo.papermc.io/repository/maven-public/") {
-        if (paperApiVersion.startsWith("26.2.")) {
+        if (paperApiVersion.startsWith("26.")) {
             content {
                 excludeModule("io.papermc.paper", "paper-api")
             }
@@ -68,5 +68,15 @@ tasks {
     }
     build {
         dependsOn(shadowJar)
+    }
+}
+
+// ── 部署产物统一输出 ─────────────────────────────────────────────────────────
+// 所有插件的 shade 包集中输出到 <IdeaProjects>/Source-dist，方便一次性上传到服务器。
+// 需要换目录：./gradlew shadowJar -PsourceDist=D:/upload
+val sourceDistDir = file(providers.gradleProperty("sourceDist").orNull ?: "${rootDir}/../Source-dist")
+tasks.matching { it.name == "shadowJar" }.configureEach {
+    if (this is org.gradle.api.tasks.bundling.AbstractArchiveTask) {
+        destinationDirectory.set(sourceDistDir)
     }
 }

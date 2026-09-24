@@ -8,7 +8,7 @@ SourceScE 是全屏屏幕效果插件：使用 CraftEngine 图像作为全屏覆
 - CraftEngine：提供 `sourcesce:fullscreen` 和 `sourcesce:fullscreen_transparent` 图像，实际显示效果需要 CE。
 - PacketEvents：隐藏原版热栏、生命、饥饿、经验条；缺失时这些 HUD 不隐藏，但插件仍能工作。
 - BetterHud：可选，只有 `hide-betterhud: true` 时参与隐藏 BetterHud HUD。
-- 产物：`build/libs/SourceScE.jar`。
+- 产物：`../Source-dist/SourceScE.jar`。
 
 ```powershell
 $env:JAVA_HOME = 'C:\Users\32394\.jdks\ms-21.0.11'
